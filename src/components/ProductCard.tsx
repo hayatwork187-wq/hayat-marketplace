@@ -1,4 +1,4 @@
-import { MapPin, MessageCircle } from "lucide-react";
+import { MapPin, MessageCircle, Phone } from "lucide-react";
 import { Product } from "@/types/product";
 
 interface ProductCardProps {
@@ -16,6 +16,10 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       `هل لا يزال متاحاً؟`
     );
     window.open(`https://wa.me/${product.sellerPhone.replace(/\+/g, '')}?text=${message}`, '_blank');
+  };
+
+  const handleCallClick = () => {
+    window.location.href = `tel:${product.sellerPhone}`;
   };
 
   return (
@@ -59,14 +63,23 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           <span className="text-xs">{product.wilaya}</span>
         </div>
 
-        {/* WhatsApp Button */}
-        <button 
-          onClick={handleWhatsAppClick}
-          className="btn-whatsapp flex items-center justify-center gap-2"
-        >
-          <MessageCircle className="w-4 h-4" />
-          <span>Order via WhatsApp</span>
-        </button>
+        {/* Action Buttons */}
+        <div className="flex gap-2">
+          <button 
+            onClick={handleCallClick}
+            className="flex-1 py-2.5 px-3 rounded-lg font-semibold text-sm transition-all duration-200 bg-primary text-primary-foreground hover:bg-primary/90 flex items-center justify-center gap-1.5"
+          >
+            <Phone className="w-4 h-4" />
+            <span>اتصال</span>
+          </button>
+          <button 
+            onClick={handleWhatsAppClick}
+            className="flex-1 btn-whatsapp flex items-center justify-center gap-1.5"
+          >
+            <MessageCircle className="w-4 h-4" />
+            <span>واتساب</span>
+          </button>
+        </div>
       </div>
     </div>
   );
