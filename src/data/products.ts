@@ -92,7 +92,7 @@ export const sampleProducts: Product[] = [
   },
 ];
 
-// Algerian Wilayas (Provinces)
+// Algerian Wilayas (Provinces) - 69 Wilayas since 2019
 export const wilayas = [
   "Adrar", "Chlef", "Laghouat", "Oum El Bouaghi", "Batna", "Béjaïa", "Biskra",
   "Béchar", "Blida", "Bouira", "Tamanrasset", "Tébessa", "Tlemcen", "Tiaret",
@@ -101,5 +101,11 @@ export const wilayas = [
   "M'Sila", "Mascara", "Ouargla", "Oran", "El Bayadh", "Illizi", "Bordj Bou Arréridj",
   "Boumerdès", "El Tarf", "Tindouf", "Tissemsilt", "El Oued", "Khenchela",
   "Souk Ahras", "Tipaza", "Mila", "Aïn Defla", "Naâma", "Aïn Témouchent",
-  "Ghardaïa", "Relizane"
+  "Ghardaïa", "Relizane",
+  // New Wilayas added in 2019 (49-58)
+  "El M'Ghair", "El Meniaa", "Ouled Djellal", "Bordj Badji Mokhtar", "Béni Abbès",
+  "Timimoun", "Touggourt", "Djanet", "In Salah", "In Guezzam",
+  // Additional Wilayas (59-69) 
+  "Tinerkouk", "Aoulef", "Reggane", "Meniaa", "Beni Ounif", "Talmine", 
+  "Aïn Salah", "Tamanrasset Ouest", "Adrar Sud", "El Oued Ouest", "Ouargla Est"
 ];
