@@ -1,14 +1,16 @@
 import { Home, PlusCircle, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-
-const navItems = [
-  { path: "/", label: "Home", icon: Home },
-  { path: "/sell", label: "Sell", icon: PlusCircle },
-  { path: "/profile", label: "Profile", icon: User },
-];
+import { useLanguage } from "@/hooks/useLanguage";
 
 export function BottomNav() {
   const location = useLocation();
+  const { t } = useLanguage();
+
+  const navItems = [
+    { path: "/", label: t("home"), icon: Home },
+    { path: "/sell", label: t("sell"), icon: PlusCircle },
+    { path: "/profile", label: t("profile"), icon: User },
+  ];
 
   return (
     <nav className="bottom-nav z-50">

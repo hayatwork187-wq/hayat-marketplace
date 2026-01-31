@@ -1,5 +1,6 @@
 import { MapPin, MessageCircle, Phone } from "lucide-react";
 import { Product } from "@/types/product";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface ProductCardProps {
   product: Product;
@@ -7,14 +8,32 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, index = 0 }: ProductCardProps) {
+  const { t, language } = useLanguage();
+
   const handleWhatsAppClick = () => {
-    const message = encodeURIComponent(
-      `مرحبا! أنا مهتم بـ: ${product.title}\n` +
-      `السعر: ${product.price.toLocaleString()} DZD\n` +
-      `الحالة: ${product.condition === 'new' ? 'جديد' : 'مستعمل'}\n` +
-      `الولاية: ${product.wilaya}\n\n` +
-      `هل لا يزال متاحاً؟`
-    );
+    const message = language === "ar" 
+      ? encodeURIComponent(
+          `مرحبا! أنا مهتم بـ: ${product.title}\n` +
+          `السعر: ${product.price.toLocaleString()} DZD\n` +
+          `الحالة: ${product.condition === 'new' ? 'جديد' : 'مستعمل'}\n` +
+          `الولاية: ${product.wilaya}\n\n` +
+          `هل لا يزال متاحاً؟`
+        )
+      : language === "fr"
+      ? encodeURIComponent(
+          `Bonjour! Je suis intéressé par: ${product.title}\n` +
+          `Prix: ${product.price.toLocaleString()} DZD\n` +
+          `État: ${product.condition === 'new' ? 'Neuf' : 'Occasion'}\n` +
+          `Wilaya: ${product.wilaya}\n\n` +
+          `Est-ce toujours disponible?`
+        )
+      : encodeURIComponent(
+          `Hello! I'm interested in: ${product.title}\n` +
+          `Price: ${product.price.toLocaleString()} DZD\n` +
+          `Condition: ${product.condition === 'new' ? 'New' : 'Used'}\n` +
+          `Wilaya: ${product.wilaya}\n\n` +
+          `Is it still available?`
+        );
     window.open(`https://wa.me/${product.sellerPhone.replace(/\+/g, '')}?text=${message}`, '_blank');
   };
 
@@ -37,11 +56,11 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         />
         {/* Condition Badge */}
         <span 
-          className={`absolute top-2 left-2 ${
+          className={`absolute top-2 ${language === "ar" ? "right-2" : "left-2"} ${
             product.condition === 'new' ? 'badge-new' : 'badge-used'
           }`}
         >
-          {product.condition === 'new' ? 'New' : 'Used'}
+          {product.condition === 'new' ? t("new") : t("used")}
         </span>
       </div>
 
@@ -70,14 +89,14 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             className="flex-1 py-2.5 px-3 rounded-lg font-semibold text-sm transition-all duration-200 bg-primary text-primary-foreground hover:bg-primary/90 flex items-center justify-center gap-1.5"
           >
             <Phone className="w-4 h-4" />
-            <span>اتصال</span>
+            <span>{t("call")}</span>
           </button>
           <button 
             onClick={handleWhatsAppClick}
             className="flex-1 btn-whatsapp flex items-center justify-center gap-1.5"
           >
             <MessageCircle className="w-4 h-4" />
-            <span>واتساب</span>
+            <span>{t("whatsapp")}</span>
           </button>
         </div>
       </div>
