@@ -12,7 +12,7 @@ const Index = () => {
       
       {/* Hero Banner */}
       <div className="px-4 py-4">
-        <div className="bg-gradient-to-r from-primary to-orange-500 rounded-2xl p-4 text-primary-foreground">
+        <div className="bg-gradient-to-r from-primary to-primary/70 rounded-2xl p-5 text-primary-foreground shadow-lg">
           <h2 className="text-xl font-bold mb-1">Welcome to Hayat Shop! 🇩🇿</h2>
           <p className="text-sm opacity-90">Buy & Sell across all 58 Wilayas</p>
         </div>
