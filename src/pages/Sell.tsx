@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { BottomNav } from "@/components/BottomNav";
 import { useStore } from "@/store/useStore";
+import { useLanguage } from "@/hooks/useLanguage";
 import { wilayas } from "@/data/products";
 import { Camera, X, Plus, Check } from "lucide-react";
 import { toast } from "sonner";
@@ -10,6 +11,7 @@ import { toast } from "sonner";
 const Sell = () => {
   const navigate = useNavigate();
   const { addProduct, user } = useStore();
+  const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [images, setImages] = useState<string[]>([]);
@@ -46,27 +48,27 @@ const Sell = () => {
     e.preventDefault();
 
     if (images.length === 0) {
-      toast.error("Please add at least one image");
+      toast.error(t("imageRequired"));
       return;
     }
 
     if (!title.trim()) {
-      toast.error("Please enter a product title");
+      toast.error(t("titleRequired"));
       return;
     }
 
     if (!price || parseFloat(price) <= 0) {
-      toast.error("Please enter a valid price");
+      toast.error(t("priceRequired"));
       return;
     }
 
     if (!wilaya) {
-      toast.error("Please select your Wilaya");
+      toast.error(t("wilayaRequired"));
       return;
     }
 
     if (!phone.trim()) {
-      toast.error("Please enter your phone number");
+      toast.error(t("phoneRequired"));
       return;
     }
 
@@ -87,20 +89,20 @@ const Sell = () => {
     addProduct(newProduct);
 
     setTimeout(() => {
-      toast.success("Product listed successfully! 🎉");
+      toast.success(t("productListed"));
       navigate("/profile");
     }, 500);
   };
 
   return (
     <div className="page-container">
-      <Header title="Sell Product" showSearch={false} />
+      <Header title={t("sellProduct")} showSearch={false} />
 
       <form onSubmit={handleSubmit} className="px-4 py-4 space-y-5">
         {/* Image Upload */}
         <div>
           <label className="block text-sm font-semibold text-foreground mb-2">
-            Photos ({images.length}/10)
+            {t("photos")} ({images.length}/10)
           </label>
           <div className="grid grid-cols-4 gap-2">
             {images.map((img, index) => (
@@ -109,7 +111,7 @@ const Sell = () => {
                 <button
                   type="button"
                   onClick={() => removeImage(index)}
-                  className="absolute top-1 right-1 w-6 h-6 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center"
+                  className="absolute top-1 end-1 w-6 h-6 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -122,7 +124,7 @@ const Sell = () => {
                 className="aspect-square rounded-xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-1 hover:border-primary hover:bg-accent transition-colors"
               >
                 <Plus className="w-6 h-6 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">Add</span>
+                <span className="text-xs text-muted-foreground">{t("add")}</span>
               </button>
             )}
           </div>
@@ -139,13 +141,13 @@ const Sell = () => {
         {/* Product Title */}
         <div>
           <label className="block text-sm font-semibold text-foreground mb-2">
-            Product Name
+            {t("productName")}
           </label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="e.g., iPhone 14 Pro Max 256GB"
+            placeholder={t("productNamePlaceholder")}
             className="form-input"
             maxLength={100}
           />
@@ -154,13 +156,13 @@ const Sell = () => {
         {/* Price */}
         <div>
           <label className="block text-sm font-semibold text-foreground mb-2">
-            Price (DZD)
+            {t("price")} (DZD)
           </label>
           <input
             type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            placeholder="e.g., 150000"
+            placeholder={t("pricePlaceholder")}
             className="form-input"
             min="0"
           />
@@ -169,7 +171,7 @@ const Sell = () => {
         {/* Condition */}
         <div>
           <label className="block text-sm font-semibold text-foreground mb-2">
-            Condition
+            {t("condition")}
           </label>
           <div className="flex gap-3">
             {(["new", "used"] as const).map((cond) => (
@@ -184,7 +186,7 @@ const Sell = () => {
                 }`}
               >
                 {condition === cond && <Check className="w-4 h-4" />}
-                {cond === "new" ? "New" : "Used"}
+                {cond === "new" ? t("new") : t("used")}
               </button>
             ))}
           </div>
@@ -193,14 +195,14 @@ const Sell = () => {
         {/* Wilaya */}
         <div>
           <label className="block text-sm font-semibold text-foreground mb-2">
-            Wilaya (Province)
+            {t("wilaya")}
           </label>
           <select
             value={wilaya}
             onChange={(e) => setWilaya(e.target.value)}
             className="form-input appearance-none bg-card"
           >
-            <option value="">Select your Wilaya</option>
+            <option value="">{t("selectWilaya")}</option>
             {wilayas.map((w) => (
               <option key={w} value={w}>
                 {w}
@@ -212,7 +214,7 @@ const Sell = () => {
         {/* Phone Number */}
         <div>
           <label className="block text-sm font-semibold text-foreground mb-2">
-            WhatsApp Number
+            {t("whatsappNumber")}
           </label>
           <input
             type="tel"
@@ -232,12 +234,12 @@ const Sell = () => {
           {isSubmitting ? (
             <>
               <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
-              Publishing...
+              {t("publishing")}
             </>
           ) : (
             <>
               <Camera className="w-5 h-5" />
-              Publish Listing
+              {t("publishListing")}
             </>
           )}
         </button>

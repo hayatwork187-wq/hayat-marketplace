@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Header } from "@/components/Header";
 import { BottomNav } from "@/components/BottomNav";
 import { ProductCard } from "@/components/ProductCard";
+import { LanguageSettings } from "@/components/LanguageSettings";
 import { useStore } from "@/store/useStore";
-import { Edit2, Mail, Phone, MapPin, Check, Trash2, BadgeCheck, Camera } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
+import { Edit2, Mail, Phone, MapPin, Check, Trash2, BadgeCheck, Camera, Settings } from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -15,6 +17,7 @@ import {
 
 const Profile = () => {
   const { user, updateUser, getUserProducts, deleteProduct } = useStore();
+  const { t } = useLanguage();
   const userProducts = getUserProducts();
 
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -25,7 +28,7 @@ const Profile = () => {
 
   const handleSaveProfile = () => {
     if (!editName.trim()) {
-      toast.error("Name cannot be empty");
+      toast.error(t("nameRequired"));
       return;
     }
 
@@ -37,7 +40,7 @@ const Profile = () => {
     });
 
     setIsEditOpen(false);
-    toast.success("Profile updated successfully!");
+    toast.success(t("profileUpdated"));
   };
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,12 +56,12 @@ const Profile = () => {
 
   const handleDeleteProduct = (productId: string) => {
     deleteProduct(productId);
-    toast.success("Product deleted");
+    toast.success(t("productDeleted"));
   };
 
   return (
     <div className="page-container">
-      <Header title="Profile" showSearch={false} />
+      <Header title={t("profile")} showSearch={false} />
 
       {/* Profile Identity Card */}
       <div className="px-4 py-6">
@@ -90,12 +93,12 @@ const Profile = () => {
                 <DialogTrigger asChild>
                   <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors shadow-md">
                     <Edit2 className="w-4 h-4" />
-                    Edit Profile
+                    {t("editProfile")}
                   </button>
                 </DialogTrigger>
                 <DialogContent className="mx-4 max-w-sm rounded-2xl">
                   <DialogHeader>
-                    <DialogTitle className="text-xl">Edit Profile</DialogTitle>
+                    <DialogTitle className="text-xl">{t("editProfile")}</DialogTitle>
                   </DialogHeader>
                   <div className="space-y-4 mt-4">
                     {/* Avatar Upload */}
@@ -124,24 +127,24 @@ const Profile = () => {
                           />
                         </label>
                       </div>
-                      <span className="text-xs text-muted-foreground">Tap to change photo</span>
+                      <span className="text-xs text-muted-foreground">{t("tapToChangePhoto")}</span>
                     </div>
                     
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-1.5">
-                        Name
+                        {t("name")}
                       </label>
                       <input
                         type="text"
                         value={editName}
                         onChange={(e) => setEditName(e.target.value)}
                         className="form-input"
-                        placeholder="Your full name"
+                        placeholder={t("name")}
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-1.5">
-                        Email
+                        {t("email")}
                       </label>
                       <input
                         type="email"
@@ -153,7 +156,7 @@ const Profile = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-1.5">
-                        Phone
+                        {t("phone")}
                       </label>
                       <input
                         type="tel"
@@ -168,14 +171,14 @@ const Profile = () => {
                         onClick={() => setIsEditOpen(false)}
                         className="flex-1 py-3 rounded-xl bg-secondary text-secondary-foreground font-medium hover:bg-secondary/80 transition-colors"
                       >
-                        Cancel
+                        {t("cancel")}
                       </button>
                       <button
                         onClick={handleSaveProfile}
                         className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-md"
                       >
                         <Check className="w-4 h-4" />
-                        Save Changes
+                        {t("saveChanges")}
                       </button>
                     </div>
                   </div>
@@ -189,7 +192,7 @@ const Profile = () => {
                 <h2 className="text-xl font-bold text-foreground">{user.name}</h2>
                 <BadgeCheck className="w-5 h-5 text-primary" />
               </div>
-              <span className="text-sm text-muted-foreground">Active Seller</span>
+              <span className="text-sm text-muted-foreground">{t("activeSeller")}</span>
             </div>
 
             {/* User Info Cards */}
@@ -199,7 +202,7 @@ const Profile = () => {
                   <Phone className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Phone</p>
+                  <p className="text-xs text-muted-foreground">{t("phone")}</p>
                   <p className="text-sm font-medium text-foreground">{user.phone}</p>
                 </div>
               </div>
@@ -209,7 +212,7 @@ const Profile = () => {
                   <Mail className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Email</p>
+                  <p className="text-xs text-muted-foreground">{t("email")}</p>
                   <p className="text-sm font-medium text-foreground">{user.email}</p>
                 </div>
               </div>
@@ -219,25 +222,28 @@ const Profile = () => {
                   <MapPin className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Location</p>
+                  <p className="text-xs text-muted-foreground">{t("location")}</p>
                   <p className="text-sm font-medium text-foreground">Algiers, Algeria</p>
                 </div>
               </div>
+
+              {/* Language Settings */}
+              <LanguageSettings />
             </div>
 
             {/* Stats Row */}
             <div className="mt-4 pt-4 border-t border-border flex justify-around">
               <div className="text-center">
                 <div className="text-2xl font-bold text-foreground">{userProducts.length}</div>
-                <div className="text-xs text-muted-foreground">Listings</div>
+                <div className="text-xs text-muted-foreground">{t("listings")}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-foreground">0</div>
-                <div className="text-xs text-muted-foreground">Sold</div>
+                <div className="text-xs text-muted-foreground">{t("sold")}</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-whatsapp">Active</div>
-                <div className="text-xs text-muted-foreground">Status</div>
+                <div className="text-2xl font-bold text-whatsapp">{t("active")}</div>
+                <div className="text-xs text-muted-foreground">{t("status")}</div>
               </div>
             </div>
           </div>
@@ -246,9 +252,9 @@ const Profile = () => {
 
       {/* My Listings Section */}
       <div className="px-4 mb-3">
-        <h2 className="text-lg font-bold text-foreground">My Listings</h2>
+        <h2 className="text-lg font-bold text-foreground">{t("myListings")}</h2>
         <p className="text-sm text-muted-foreground">
-          {userProducts.length} product{userProducts.length !== 1 ? "s" : ""} listed
+          {userProducts.length} {t("productsListed")}
         </p>
       </div>
 
@@ -259,7 +265,7 @@ const Profile = () => {
               <ProductCard product={product} index={index} />
               <button
                 onClick={() => handleDeleteProduct(product.id)}
-                className="absolute top-2 right-2 w-8 h-8 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center shadow-lg hover:scale-105 transition-transform z-10"
+                className="absolute top-2 end-2 w-8 h-8 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center shadow-lg hover:scale-105 transition-transform z-10"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
@@ -271,9 +277,9 @@ const Profile = () => {
           <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mb-4">
             <span className="text-4xl">🏷️</span>
           </div>
-          <h3 className="text-lg font-semibold text-foreground mb-1">No listings yet</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-1">{t("noListings")}</h3>
           <p className="text-sm text-muted-foreground text-center mb-4">
-            Start selling by adding your first product!
+            {t("startSelling")}
           </p>
         </div>
       )}
