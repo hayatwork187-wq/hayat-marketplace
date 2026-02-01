@@ -1,105 +1,40 @@
-import { MapPin, MessageCircle, Phone } from "lucide-react";
-import { Product } from "@/types/product";
-import { useLanguage } from "@/hooks/useLanguage";
+import { Link } from "react-router-dom";
+import { Product } from "@/store/useStore";
+import { MapPin, Tag } from "lucide-react";
 
-interface ProductCardProps {
-  product: Product;
-  index?: number;
-}
-
-export function ProductCard({ product, index = 0 }: ProductCardProps) {
-  const { t, language } = useLanguage();
-
-  const handleWhatsAppClick = () => {
-    const message = language === "ar" 
-      ? encodeURIComponent(
-          `مرحبا! أنا مهتم بـ: ${product.title}\n` +
-          `السعر: ${product.price.toLocaleString()} DZD\n` +
-          `الحالة: ${product.condition === 'new' ? 'جديد' : 'مستعمل'}\n` +
-          `الولاية: ${product.wilaya}\n\n` +
-          `هل لا يزال متاحاً؟`
-        )
-      : language === "fr"
-      ? encodeURIComponent(
-          `Bonjour! Je suis intéressé par: ${product.title}\n` +
-          `Prix: ${product.price.toLocaleString()} DZD\n` +
-          `État: ${product.condition === 'new' ? 'Neuf' : 'Occasion'}\n` +
-          `Wilaya: ${product.wilaya}\n\n` +
-          `Est-ce toujours disponible?`
-        )
-      : encodeURIComponent(
-          `Hello! I'm interested in: ${product.title}\n` +
-          `Price: ${product.price.toLocaleString()} DZD\n` +
-          `Condition: ${product.condition === 'new' ? 'New' : 'Used'}\n` +
-          `Wilaya: ${product.wilaya}\n\n` +
-          `Is it still available?`
-        );
-    window.open(`https://wa.me/${product.sellerPhone.replace(/\+/g, '')}?text=${message}`, '_blank');
-  };
-
-  const handleCallClick = () => {
-    window.location.href = `tel:${product.sellerPhone}`;
-  };
-
+export const ProductCard = ({ product }: { product: Product }) => {
   return (
-    <div 
-      className={`product-card animate-fade-up`}
-      style={{ animationDelay: `${index * 0.05}s` }}
-    >
-      {/* Product Image */}
-      <div className="relative aspect-square overflow-hidden bg-secondary">
-        <img
-          src={product.images[0]}
-          alt={product.title}
-          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-          loading="lazy"
-        />
-        {/* Condition Badge */}
-        <span 
-          className={`absolute top-2 ${language === "ar" ? "right-2" : "left-2"} ${
-            product.condition === 'new' ? 'badge-new' : 'badge-used'
-          }`}
-        >
-          {product.condition === 'new' ? t("new") : t("used")}
-        </span>
-      </div>
-
-      {/* Product Info */}
-      <div className="p-3">
-        <h3 className="text-sm font-medium text-foreground line-clamp-2 mb-1 min-h-[2.5rem]">
-          {product.title}
-        </h3>
-
-        {/* Price */}
-        <div className="flex items-baseline gap-1 mb-2">
-          <span className="price-text text-lg">{product.price.toLocaleString()}</span>
-          <span className="currency text-sm">DZD</span>
+    <Link to={`/product/${product.id}`} className="group">
+      <div className="bg-white rounded-[25px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-50 relative">
+        {/* الصورة مع زوايا ناعمة */}
+        <div className="aspect-square overflow-hidden relative">
+          <img 
+            src={product.image} 
+            alt={product.title}
+            className="w-full h-full object-cover group-hover:scale-110 transition-duration-500"
+          />
+          <div className="absolute top-2 right-2 bg-white/80 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1">
+            <MapPin className="w-3 h-3 text-[#191970]" />
+            <span className="text-[10px] font-bold text-gray-700">{product.location}</span>
+          </div>
         </div>
 
-        {/* Location */}
-        <div className="flex items-center gap-1 text-muted-foreground mb-3">
-          <MapPin className="w-3.5 h-3.5" />
-          <span className="text-xs">{product.wilaya}</span>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex gap-2">
-          <button 
-            onClick={handleCallClick}
-            className="flex-1 py-2.5 px-3 rounded-lg font-semibold text-sm transition-all duration-200 bg-primary text-primary-foreground hover:bg-primary/90 flex items-center justify-center gap-1.5"
-          >
-            <Phone className="w-4 h-4" />
-            <span>{t("call")}</span>
-          </button>
-          <button 
-            onClick={handleWhatsAppClick}
-            className="flex-1 btn-whatsapp flex items-center justify-center gap-1.5"
-          >
-            <MessageCircle className="w-4 h-4" />
-            <span>{t("whatsapp")}</span>
-          </button>
+        {/* تفاصيل المنتج */}
+        <div className="p-3">
+          <h3 className="text-sm font-bold text-gray-800 line-clamp-1 mb-1">{product.title}</h3>
+          
+          <div className="flex items-center justify-between mt-2">
+            <div className="flex flex-col">
+              <span className="text-[#191970] font-black text-lg">
+                {product.price} <span className="text-[10px]">د.ج</span>
+              </span>
+            </div>
+            <div className="bg-amber-50 p-2 rounded-full">
+              <Tag className="w-4 h-4 text-amber-500" />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
-}
+};
