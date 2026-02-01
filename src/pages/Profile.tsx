@@ -1,288 +1,63 @@
 import { useState } from "react";
 import { Header } from "@/components/Header";
 import { BottomNav } from "@/components/BottomNav";
-import { ProductCard } from "@/components/ProductCard";
-import { LanguageSettings } from "@/components/LanguageSettings";
 import { useStore } from "@/store/useStore";
-import { useLanguage } from "@/hooks/useLanguage";
-import { Edit2, Mail, Phone, MapPin, Check, Trash2, BadgeCheck, Camera, Settings } from "lucide-react";
-import { toast } from "sonner";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { BadgeCheck, Settings, Mail, Phone, ShoppingBag } from "lucide-react";
 
 const Profile = () => {
-  const { user, updateUser, getUserProducts, deleteProduct } = useStore();
-  const { t } = useLanguage();
-  const userProducts = getUserProducts();
-
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [editName, setEditName] = useState(user.name);
-  const [editEmail, setEditEmail] = useState(user.email);
-  const [editPhone, setEditPhone] = useState(user.phone);
-  const [editAvatar, setEditAvatar] = useState(user.avatar || "");
-
-  const handleSaveProfile = () => {
-    if (!editName.trim()) {
-      toast.error(t("nameRequired"));
-      return;
-    }
-
-    updateUser({
-      name: editName.trim(),
-      email: editEmail.trim(),
-      phone: editPhone.trim(),
-      avatar: editAvatar.trim() || undefined,
-    });
-
-    setIsEditOpen(false);
-    toast.success(t("profileUpdated"));
-  };
-
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setEditAvatar(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleDeleteProduct = (productId: string) => {
-    deleteProduct(productId);
-    toast.success(t("productDeleted"));
-  };
+  const { user } = useStore();
 
   return (
-    <div className="page-container">
-      <Header title={t("profile")} showSearch={false} />
-
-      {/* Profile Identity Card */}
-      <div className="px-4 py-6">
-        <div className="bg-card rounded-2xl overflow-hidden shadow-card">
-          {/* Header Banner */}
-          <div className="h-20 bg-gradient-to-r from-primary to-primary/80" />
-          
-          {/* Profile Content */}
-          <div className="px-5 pb-5 -mt-10">
-            {/* Avatar & Edit */}
-            <div className="flex items-end justify-between mb-4">
-              <div className="relative">
-                <div className="w-24 h-24 rounded-full overflow-hidden bg-secondary ring-4 ring-card shadow-lg">
-                  {user.avatar ? (
-                    <img
-                      src={user.avatar}
-                      alt={user.name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-primary text-primary-foreground text-3xl font-bold">
-                      {user.name.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-                <DialogTrigger asChild>
-                  <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors shadow-md">
-                    <Edit2 className="w-4 h-4" />
-                    {t("editProfile")}
-                  </button>
-                </DialogTrigger>
-                <DialogContent className="mx-4 max-w-sm rounded-2xl">
-                  <DialogHeader>
-                    <DialogTitle className="text-xl">{t("editProfile")}</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4 mt-4">
-                    {/* Avatar Upload */}
-                    <div className="flex flex-col items-center gap-3">
-                      <div className="relative">
-                        <div className="w-20 h-20 rounded-full overflow-hidden bg-secondary ring-2 ring-border">
-                          {editAvatar ? (
-                            <img
-                              src={editAvatar}
-                              alt="Preview"
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-primary text-primary-foreground text-2xl font-bold">
-                              {editName.charAt(0).toUpperCase()}
-                            </div>
-                          )}
-                        </div>
-                        <label className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors shadow-md">
-                          <Camera className="w-4 h-4" />
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleAvatarChange}
-                            className="hidden"
-                          />
-                        </label>
-                      </div>
-                      <span className="text-xs text-muted-foreground">{t("tapToChangePhoto")}</span>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-1.5">
-                        {t("name")}
-                      </label>
-                      <input
-                        type="text"
-                        value={editName}
-                        onChange={(e) => setEditName(e.target.value)}
-                        className="form-input"
-                        placeholder={t("name")}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-1.5">
-                        {t("email")}
-                      </label>
-                      <input
-                        type="email"
-                        value={editEmail}
-                        onChange={(e) => setEditEmail(e.target.value)}
-                        className="form-input"
-                        placeholder="your@email.com"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-1.5">
-                        {t("phone")}
-                      </label>
-                      <input
-                        type="tel"
-                        value={editPhone}
-                        onChange={(e) => setEditPhone(e.target.value)}
-                        className="form-input"
-                        placeholder="+213 XXX XXX XXX"
-                      />
-                    </div>
-                    <div className="flex gap-3 pt-2">
-                      <button
-                        onClick={() => setIsEditOpen(false)}
-                        className="flex-1 py-3 rounded-xl bg-secondary text-secondary-foreground font-medium hover:bg-secondary/80 transition-colors"
-                      >
-                        {t("cancel")}
-                      </button>
-                      <button
-                        onClick={handleSaveProfile}
-                        className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-md"
-                      >
-                        <Check className="w-4 h-4" />
-                        {t("saveChanges")}
-                      </button>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </div>
-
-            {/* Name & Verified Badge */}
-            <div className="mb-4">
-              <div className="flex items-center gap-2 mb-1">
-                <h2 className="text-xl font-bold text-foreground">{user.name}</h2>
-                <BadgeCheck className="w-5 h-5 text-primary" />
-              </div>
-              <span className="text-sm text-muted-foreground">{t("activeSeller")}</span>
-            </div>
-
-            {/* User Info Cards */}
-            <div className="grid gap-3">
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Phone className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">{t("phone")}</p>
-                  <p className="text-sm font-medium text-foreground">{user.phone}</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Mail className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">{t("email")}</p>
-                  <p className="text-sm font-medium text-foreground">{user.email}</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <MapPin className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">{t("location")}</p>
-                  <p className="text-sm font-medium text-foreground">Algiers, Algeria</p>
-                </div>
-              </div>
-
-              {/* Language Settings */}
-              <LanguageSettings />
-            </div>
-
-            {/* Stats Row */}
-            <div className="mt-4 pt-4 border-t border-border flex justify-around">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-foreground">{userProducts.length}</div>
-                <div className="text-xs text-muted-foreground">{t("listings")}</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-foreground">0</div>
-                <div className="text-xs text-muted-foreground">{t("sold")}</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-whatsapp">{t("active")}</div>
-                <div className="text-xs text-muted-foreground">{t("status")}</div>
-              </div>
+    <div className="min-h-screen bg-slate-50 pb-20 font-sans text-right" dir="rtl">
+      <Header />
+      
+      {/* رأس الصفحة باللون الأزرق الليلي الفخم */}
+      <div className="bg-[#191970] pt-12 pb-24 px-6 text-white rounded-b-[40px] shadow-2xl relative">
+        <div className="flex flex-col items-center">
+          <div className="relative">
+            <img 
+              src={user?.avatar || "https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=400"} 
+              className="w-28 h-28 rounded-full border-4 border-white/30 shadow-2xl"
+              alt="Profile"
+            />
+            <div className="absolute bottom-1 right-1 bg-emerald-500 p-1.5 rounded-full border-4 border-[#191970]">
+              <BadgeCheck className="w-5 h-5 text-white" />
             </div>
           </div>
+          <h2 className="mt-5 text-2xl font-extrabold tracking-tight">{user?.name || "مستعمل حياة"}</h2>
+          <p className="text-blue-200/80 text-sm mt-1">تاجر موثوق في سوق حياة</p>
         </div>
       </div>
 
-      {/* My Listings Section */}
-      <div className="px-4 mb-3">
-        <h2 className="text-lg font-bold text-foreground">{t("myListings")}</h2>
-        <p className="text-sm text-muted-foreground">
-          {userProducts.length} {t("productsListed")}
-        </p>
-      </div>
-
-      {userProducts.length > 0 ? (
-        <div className="grid grid-cols-2 gap-3 px-4 pb-4">
-          {userProducts.map((product, index) => (
-            <div key={product.id} className="relative animate-fade-up" style={{ animationDelay: `${index * 0.05}s` }}>
-              <ProductCard product={product} index={index} />
-              <button
-                onClick={() => handleDeleteProduct(product.id)}
-                className="absolute top-2 end-2 w-8 h-8 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center shadow-lg hover:scale-105 transition-transform z-10"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
+      {/* بطاقة المعلومات والخيارات */}
+      <div className="px-6 -mt-12">
+        <div className="bg-white rounded-3xl p-8 shadow-xl border border-blue-50/50">
+          <div className="grid grid-cols-2 gap-6 mb-8 text-center border-b border-gray-100 pb-8">
+            <div className="p-3 bg-blue-50/50 rounded-2xl">
+              <p className="text-[#191970] font-black text-2xl">0</p>
+              <p className="text-gray-500 text-[10px] uppercase tracking-wider">إعلاناتي</p>
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center py-12 px-4">
-          <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mb-4">
-            <span className="text-4xl">🏷️</span>
+            <div className="p-3 bg-blue-50/50 rounded-2xl">
+              <p className="text-[#191970] font-black text-2xl">0</p>
+              <p className="text-gray-500 text-[10px] uppercase tracking-wider">المشاهدات</p>
+            </div>
           </div>
-          <h3 className="text-lg font-semibold text-foreground mb-1">{t("noListings")}</h3>
-          <p className="text-sm text-muted-foreground text-center mb-4">
-            {t("startSelling")}
-          </p>
+
+          <div className="space-y-6">
+            <div className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50/50">
+              <div className="bg-white p-2 rounded-lg shadow-sm text-[#191970]">
+                <Mail className="w-5 h-5" />
+              </div>
+              <span className="text-gray-700 font-medium">{user?.email || "البريد غير متوفر"}</span>
+            </div>
+          </div>
+
+          <button className="w-full mt-10 bg-[#191970] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-lg shadow-blue-900/20 active:scale-95 transition-all">
+            <Settings className="w-5 h-5" />
+            تعديل حسابي الشخصي
+          </button>
         </div>
-      )}
+      </div>
 
       <BottomNav />
     </div>
