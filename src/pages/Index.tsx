@@ -1,60 +1,85 @@
 import { Header } from "@/components/Header";
-import { ProductGrid } from "@/components/ProductGrid";
 import { BottomNav } from "@/components/BottomNav";
+import { ProductCard } from "@/components/ProductCard";
 import { useStore } from "@/store/useStore";
-import { useLanguage } from "@/hooks/useLanguage";
+import { Search, Gift, Trophy, Zap, Copy, Sparkles } from "lucide-react";
 
 const Index = () => {
-  const products = useStore((state) => state.products);
-  const { t } = useLanguage();
-
-  const categories = [
-    { key: "all", label: t("all") },
-    { key: "electronics", label: t("electronics") },
-    { key: "fashion", label: t("fashion") },
-    { key: "home", label: t("homeCategory") },
-    { key: "sports", label: t("sports") },
-    { key: "vehicles", label: t("vehicles") },
-  ];
+  const { products } = useStore();
 
   return (
-    <div className="page-container">
+    <div className="min-h-screen bg-[#F0F2F5] pb-28 font-sans text-right" dir="rtl">
       <Header />
       
-      {/* Hero Banner */}
-      <div className="px-4 py-4">
-        <div className="bg-gradient-to-r from-primary to-primary/70 rounded-2xl p-5 text-primary-foreground shadow-lg">
-          <h2 className="text-xl font-bold mb-1">{t("welcome")}</h2>
-          <p className="text-sm opacity-90">{t("welcomeSubtitle")}</p>
+      {/* الهيدر الاحترافي - أزرق ليلي */}
+      <div className="bg-[#191970] pt-6 pb-20 px-4 rounded-b-[50px] shadow-2xl relative overflow-hidden">
+        <div className="flex justify-between items-center mb-6 relative z-10">
+          <div className="flex items-center gap-2">
+            <div className="bg-amber-400 p-1.5 rounded-lg rotate-12 shadow-lg">
+              <Trophy className="text-[#191970] w-5 h-5" />
+            </div>
+            <span className="text-white font-black text-xl tracking-tight">سوق حياة</span>
+          </div>
+          <div className="bg-white/10 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/20 flex items-center gap-2">
+            <span className="text-blue-200 text-[10px]">رصيدك:</span>
+            <span className="text-amber-400 font-bold">0.00 د.ج</span>
+          </div>
+        </div>
+
+        <div className="relative z-10">
+          <input 
+            type="text" 
+            placeholder="ابحث عن هدايا ومنتجات..." 
+            className="w-full p-4 pr-12 rounded-2xl border-none shadow-2xl focus:ring-4 focus:ring-amber-400/50 text-sm"
+          />
+          <Search className="absolute right-4 top-4 text-gray-400 w-5 h-5" />
         </div>
       </div>
 
-      {/* Category Pills */}
-      <div className="px-4 mb-4">
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-          {categories.map((cat, i) => (
-            <button
-              key={cat.key}
-              className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
-                i === 0
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-secondary-foreground hover:bg-accent"
-              }`}
-            >
-              {cat.label}
-            </button>
+      {/* قسم المكافآت - ستايل تيمو المغري */}
+      <div className="px-4 -mt-12 relative z-20">
+        <div className="bg-white rounded-[32px] shadow-xl border border-amber-100 overflow-hidden">
+          <div className="bg-gradient-to-l from-[#FFD700] via-[#FFA500] to-[#FF8C00] p-4 flex items-center justify-between">
+            <div className="flex items-center gap-3 text-white">
+              <Gift className="w-6 h-6 animate-bounce" />
+              <h3 className="font-black text-lg">هدايا كاش!</h3>
+            </div>
+            <div className="bg-[#191970] text-amber-400 text-[10px] px-3 py-1 rounded-full font-bold">عرض حصري</div>
+          </div>
+          
+          <div className="p-6 text-center">
+            <p className="text-gray-500 text-xs mb-3">استخدم كود صديق واحصل على <span className="text-[#191970] font-bold">15 د.ج</span> فوراً</p>
+            <div className="flex gap-2 mb-4">
+              <input 
+                type="text" 
+                placeholder="أدخل الكود هنا" 
+                className="flex-1 bg-gray-50 border-2 border-dashed border-amber-300 rounded-xl px-4 text-center font-black text-[#191970]"
+              />
+              <button className="bg-[#191970] text-white px-5 py-3 rounded-xl font-bold active:scale-95 transition-all">تفعيل</button>
+            </div>
+            <div className="flex items-center justify-center gap-2 bg-blue-50 py-2 rounded-lg cursor-pointer">
+               <span className="text-[10px] text-gray-400">كودك:</span>
+               <span className="text-[#191970] font-black text-sm uppercase">HAYAT187</span>
+               <Copy className="w-3 h-3 text-blue-400" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* عروض الصاعقة */}
+      <div className="px-4 mt-8">
+        <div className="flex items-center gap-2 mb-4">
+          <Zap className="fill-amber-400 text-amber-400 w-5 h-5" />
+          <h2 className="font-black text-xl text-[#191970]">عروض اليوم</h2>
+          <div className="mr-auto bg-red-500 text-white text-[10px] px-2 py-0.5 rounded animate-pulse font-bold">نشط الآن</div>
+        </div>
+        
+        <div className="grid grid-cols-2 gap-4">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </div>
-
-      {/* Section Title */}
-      <div className="px-4 mb-3">
-        <h2 className="text-lg font-bold text-foreground">{t("latestListings")}</h2>
-        <p className="text-sm text-muted-foreground">{products.length} {t("productsAvailable")}</p>
-      </div>
-
-      {/* Product Grid */}
-      <ProductGrid products={products} />
 
       <BottomNav />
     </div>
