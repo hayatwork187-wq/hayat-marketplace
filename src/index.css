@@ -2,261 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Hayat Shop Design System - Algerian Marketplace */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
 @layer base {
-  :root {
-    /* Core Colors */
-    --background: 0 0% 98%;
-    --foreground: 220 20% 10%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 220 20% 10%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 10%;
-
-    /* Midnight Blue - Primary Brand */
-    --primary: 240 64% 27%;
-    --primary-foreground: 0 0% 100%;
-
-    /* Soft backgrounds */
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 220 20% 10%;
-
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 10% 46%;
-
-    --accent: 240 64% 96%;
-    --accent-foreground: 240 64% 27%;
-
-    /* WhatsApp Emerald Green */
-    --whatsapp: 142 70% 45%;
-    --whatsapp-foreground: 0 0% 100%;
-
-    /* Status Colors */
-    --success: 142 70% 45%;
-    --success-foreground: 0 0% 100%;
-
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 240 64% 27%;
-
-    /* Design tokens */
-    --radius: 0.75rem;
-    --radius-lg: 1rem;
-    --radius-xl: 1.25rem;
-
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(220 10% 10% / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(220 10% 10% / 0.1), 0 2px 4px -2px hsl(220 10% 10% / 0.1);
-    --shadow-lg: 0 10px 15px -3px hsl(220 10% 10% / 0.1), 0 4px 6px -4px hsl(220 10% 10% / 0.1);
-    --shadow-xl: 0 20px 25px -5px hsl(220 10% 10% / 0.1), 0 8px 10px -6px hsl(220 10% 10% / 0.1);
-    --shadow-card: 0 2px 8px -2px hsl(220 10% 10% / 0.08), 0 4px 16px -4px hsl(220 10% 10% / 0.12);
-    --shadow-nav: 0 -4px 12px -2px hsl(220 10% 10% / 0.08);
-
-    /* Sidebar */
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 64% 27%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 64% 96%;
-    --sidebar-accent-foreground: 240 64% 27%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 240 64% 27%;
-  }
-
-  .dark {
-    --background: 220 20% 8%;
-    --foreground: 0 0% 98%;
-
-    --card: 220 20% 12%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 220 20% 12%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 240 64% 35%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 220 20% 18%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 220 20% 18%;
-    --muted-foreground: 220 10% 60%;
-
-    --accent: 240 64% 20%;
-    --accent-foreground: 240 64% 70%;
-
-    --whatsapp: 142 70% 50%;
-    --whatsapp-foreground: 0 0% 100%;
-
-    --destructive: 0 62% 30%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 220 20% 20%;
-    --input: 220 20% 20%;
-    --ring: 240 64% 35%;
-
-    --sidebar-background: 220 20% 10%;
-    --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 240 64% 35%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 20% 15%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 220 20% 20%;
-    --sidebar-ring: 240 64% 35%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  html {
-    font-family: 'Inter', system-ui, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
   body {
-    @apply bg-background text-foreground;
+    @apply bg-[#F0F2F5] text-right;
+    font-family: 'Inter', sans-serif; /* أو أي خط عربي جميل */
   }
 }
 
 @layer components {
-  /* Product Card Styles */
-  .product-card {
-    @apply bg-card rounded-xl overflow-hidden transition-all duration-300;
-    box-shadow: var(--shadow-card);
+  /* جعل كل الأزرار الأساسية في التطبيق باللون الأزرق الليلي */
+  .btn-primary {
+    @apply bg-[#191970] text-white rounded-2xl font-bold shadow-lg active:scale-95 transition-all;
   }
-
-  .product-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-  }
-
-  /* WhatsApp Button */
-  .btn-whatsapp {
-    @apply w-full py-2.5 px-4 rounded-lg font-semibold text-sm transition-all duration-200;
-    background-color: hsl(var(--whatsapp));
-    color: hsl(var(--whatsapp-foreground));
-  }
-
-  .btn-whatsapp:hover {
-    background-color: hsl(142 70% 40%);
-    transform: scale(1.02);
-  }
-
-  .btn-whatsapp:active {
-    transform: scale(0.98);
-  }
-
-  /* Condition Badge */
-  .badge-new {
-    @apply px-2 py-0.5 text-xs font-semibold rounded-full;
-    background-color: hsl(var(--whatsapp) / 0.15);
-    color: hsl(var(--whatsapp));
-  }
-
-  .badge-used {
-    @apply px-2 py-0.5 text-xs font-semibold rounded-full;
-    background-color: hsl(var(--warning) / 0.15);
-    color: hsl(var(--warning));
-  }
-
-  /* Bottom Navigation */
-  .bottom-nav {
-    @apply fixed bottom-0 left-0 right-0 bg-card border-t border-border;
-    box-shadow: var(--shadow-nav);
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .nav-item {
-    @apply flex flex-col items-center justify-center py-2 px-3 transition-colors duration-200;
-    color: hsl(var(--muted-foreground));
-  }
-
-  .nav-item.active {
-    color: hsl(var(--primary));
-  }
-
-  .nav-item:hover {
-    color: hsl(var(--primary));
-  }
-
-  /* Form Input Styles */
-  .form-input {
-    @apply w-full px-4 py-3 rounded-xl border border-border bg-card text-foreground transition-all duration-200;
-  }
-
-  .form-input:focus {
-    @apply outline-none ring-2;
-    ring-color: hsl(var(--primary) / 0.3);
-    border-color: hsl(var(--primary));
-  }
-
-  /* Image Upload Zone */
-  .upload-zone {
-    @apply border-2 border-dashed border-border rounded-xl p-6 text-center transition-all duration-200 cursor-pointer;
-  }
-
-  .upload-zone:hover {
-    border-color: hsl(var(--primary));
-    background-color: hsl(var(--accent));
-  }
-
-  /* Page Container */
-  .page-container {
-    @apply min-h-screen pb-24 bg-background;
-  }
-
-  /* Header */
-  .app-header {
-    @apply sticky top-0 z-40 bg-card border-b border-border px-4 py-3;
-    box-shadow: var(--shadow-sm);
+  
+  /* جعل حواف البطاقات ناعمة جداً مثل تيمو */
+  .card-style {
+    @apply bg-white rounded-[30px] shadow-sm border border-gray-100;
   }
 }
 
-@layer utilities {
-  /* Animate fade up */
-  .animate-fade-up {
-    animation: fadeUp 0.4s ease-out;
-  }
-
-  @keyframes fadeUp {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Stagger animation for grid items */
-  .stagger-1 { animation-delay: 0.05s; }
-  .stagger-2 { animation-delay: 0.1s; }
-  .stagger-3 { animation-delay: 0.15s; }
-  .stagger-4 { animation-delay: 0.2s; }
-
-  /* Price text style */
-  .price-text {
-    @apply font-bold text-foreground;
-  }
-
-  /* Currency style */
-  .currency {
-    @apply text-muted-foreground font-medium;
-  }
+/* تغيير لون تحديد النص للذهبي */
+::selection {
+  background: #FFD700;
+  color: #191970;
 }
