@@ -16,9 +16,9 @@ const Index = () => {
         <div className="flex justify-between items-center mb-6 relative z-10">
           <div className="flex items-center gap-2">
             <div className="bg-amber-400 p-1.5 rounded-lg rotate-12 shadow-lg">
-              <Trophy className="text-[#191970] w-5 h-5" />
-            </div>
-            <span className="text-white font-black text-xl tracking-tight">سوق حياة</span>
+              
+            
+            <img src="/logo.png" alt="Hayat Shop" className="h-10 w-auto" />
           </div>
           <div className="bg-white/10 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/20 flex items-center gap-2">
             <span className="text-blue-200 text-[10px]">رصيدك:</span>
