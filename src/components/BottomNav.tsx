@@ -23,7 +23,7 @@ export const BottomNav = () => {
         </Link>
 
         {/* زر الإضافة - مركزي ومميز */}
-        <Link to="/add-product" className="relative -mt-12 bg-gradient-to-tr from-amber-400 to-orange-500 p-4 rounded-full shadow-[0_10px_20px_rgba(251,191,36,0.4)] border-4 border-[#F0F2F5] active:scale-90 transition-all">
+        <Link to="/sell" className="relative -mt-12 bg-gradient-to-tr from-amber-400 to-orange-500 p-4 rounded-full shadow-[0_10px_20px_rgba(251,191,36,0.4)] border-4 border-[#F0F2F5] active:scale-90 transition-all">
           <PlusCircle className="w-8 h-8 text-[#191970]" />
         </Link>
 
