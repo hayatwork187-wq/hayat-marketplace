@@ -34,9 +34,9 @@ export const BottomNav = () => {
         </Link>
 
         {/* البروفايل */}
-        <Link to="/profile" className="relative flex flex-col items-center gap-1 group">
+        <Link to="/auth" className="relative flex flex-col items-center gap-1 group">
           <User className={`w-6 h-6 transition-all duration-300 ${isActive("/profile") ? "text-amber-400 scale-110" : "text-white/60"}`} />
-          {isActive("/profile") && <span className="absolute -bottom-1 w-1 h-1 bg-amber-400 rounded-full"></span>}
+          {isActive("/auth") && <span className="absolute -bottom-1 w-1 h-1 bg-amber-400 rounded-full"></span>}
         </Link>
 
       </div>
