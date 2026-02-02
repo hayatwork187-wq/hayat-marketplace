@@ -1,40 +1,48 @@
-import { Link } from "react-router-dom";
-import { Product } from "@/store/useStore";
-import { MapPin, Tag } from "lucide-react";
+import { MessageCircle, MapPin } from "lucide-react";
 
-export const ProductCard = ({ product }: { product: Product }) => {
+interface ProductProps {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  location?: string;
+}
+
+export const ProductCard = ({ name, price, image, location = "الجزائر" }: ProductProps) => {
+  // استبدل الرقم التالي برقمك الحقيقي (مثال: 213550000000)
+  const whatsappNumber = "213XXXXXXXXX"; 
+  const message = `مرحباً "سوق حياة"، أود طلب منتج: ${name} بسعر ${price} دج`;
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
   return (
-    <Link to={`/product/${product.id}`} className="group">
-      <div className="bg-white rounded-[25px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-50 relative">
-        {/* الصورة مع زوايا ناعمة */}
-        <div className="aspect-square overflow-hidden relative">
-          <img 
-            src={product.image} 
-            alt={product.title}
-            className="w-full h-full object-cover group-hover:scale-110 transition-duration-500"
-          />
-          <div className="absolute top-2 right-2 bg-white/80 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1">
-            <MapPin className="w-3 h-3 text-[#191970]" />
-            <span className="text-[10px] font-bold text-gray-700">{product.location}</span>
+    <div className="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100 mb-2 transition-transform active:scale-95">
+      {/* صورة المنتج */}
+      <img src={image} alt={name} className="w-full h-40 object-cover" />
+      
+      <div className="p-3 text-right" dir="rtl">
+        {/* اسم المنتج */}
+        <h3 className="text-sm font-bold text-[#191970] mb-1 truncate">{name}</h3>
+        
+        {/* السعر والولاية */}
+        <div className="flex justify-between items-center mb-3">
+          <span className="text-amber-600 font-black text-sm">{price} دج</span>
+          <div className="flex items-center gap-1 text-[10px] text-gray-400">
+            <MapPin className="w-3 h-3" />
+            <span>{location}</span>
           </div>
         </div>
-
-        {/* تفاصيل المنتج */}
-        <div className="p-3">
-          <h3 className="text-sm font-bold text-gray-800 line-clamp-1 mb-1">{product.title}</h3>
-          
-          <div className="flex items-center justify-between mt-2">
-            <div className="flex flex-col">
-              <span className="text-[#191970] font-black text-lg">
-                {product.price} <span className="text-[10px]">د.ج</span>
-              </span>
-            </div>
-            <div className="bg-amber-50 p-2 rounded-full">
-              <Tag className="w-4 h-4 text-amber-500" />
-            </div>
-          </div>
-        </div>
+        
+        {/* زر الواتساب */}
+        <a 
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full bg-[#25D366] text-white py-2 rounded-xl text-[11px] font-bold flex items-center justify-center gap-2 hover:bg-green-600 transition-colors"
+        >
+          <MessageCircle className="w-4 h-4" />
+          طلب عبر واتساب
+        </a>
       </div>
-    </Link>
+    </div>
   );
 };
