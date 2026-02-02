@@ -1,249 +1,148 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { Camera, X, Plus, Check, MapPin, Phone, Tag } from "lucide-react";
+import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { BottomNav } from "@/components/BottomNav";
-import { useStore } from "@/store/useStore";
-import { useLanguage } from "@/hooks/useLanguage";
-import { wilayas } from "@/data/products";
-import { Camera, X, Plus, Check } from "lucide-react";
-import { toast } from "sonner";
 
 const Sell = () => {
   const navigate = useNavigate();
-  const { addProduct, user } = useStore();
-  const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  
+  // حالات المدخلات
   const [images, setImages] = useState<string[]>([]);
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [condition, setCondition] = useState<"new" | "used">("new");
   const [wilaya, setWilaya] = useState("");
-  const [phone, setPhone] = useState(user.phone);
+  const [phone, setPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // معالجة رفع الصور (بحد أقصى 5)
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files) return;
-
-    const remainingSlots = 10 - images.length;
-    const filesToProcess = Array.from(files).slice(0, remainingSlots);
-
-    filesToProcess.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (e.target?.result) {
-          setImages((prev) => [...prev, e.target!.result as string]);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
+    if (files) {
+      if (images.length + files.length > 5) {
+        toast.error("يمكنك إضافة 5 صور كحد أقصى");
+        return;
+      }
+      
+      const newImages = Array.from(files).map(file => URL.createObjectURL(file));
+      setImages([...images, ...newImages]);
+    }
   };
 
   const removeImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
+    setImages(images.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (images.length === 0) {
-      toast.error(t("imageRequired"));
-      return;
-    }
-
-    if (!title.trim()) {
-      toast.error(t("titleRequired"));
-      return;
-    }
-
-    if (!price || parseFloat(price) <= 0) {
-      toast.error(t("priceRequired"));
-      return;
-    }
-
-    if (!wilaya) {
-      toast.error(t("wilayaRequired"));
-      return;
-    }
-
-    if (!phone.trim()) {
-      toast.error(t("phoneRequired"));
-      return;
-    }
+  // وظيفة النشر مع فحص الشروط
+  const handlePublish = async () => {
+    if (images.length === 0) return toast.error("يرجى إضافة صورة واحدة على الأقل");
+    if (!title) return toast.error("يرجى كتابة اسم المنتج");
+    if (!price) return toast.error("يرجى تحديد السعر");
+    if (!wilaya) return toast.error("يرجى تحديد الولاية");
+    if (!phone) return toast.error("يرجى إضافة رقم واتساب");
 
     setIsSubmitting(true);
-
-    const newProduct = {
-      id: Date.now().toString(),
-      title: title.trim(),
-      price: parseFloat(price),
-      condition,
-      wilaya,
-      images,
-      sellerPhone: phone,
-      sellerId: user.id,
-      createdAt: new Date().toISOString(),
-    };
-
-    addProduct(newProduct);
-
+    
+    // محاكاة عملية النشر
     setTimeout(() => {
-      toast.success(t("productListed"));
-      navigate("/profile");
-    }, 500);
+      toast.success("تم نشر منتجك بنجاح!");
+      setIsSubmitting(false);
+      navigate("/");
+    }, 1500);
   };
 
   return (
-    <div className="page-container">
-      <Header title={t("sellProduct")} showSearch={false} />
+    <div className="min-h-screen bg-[#F8F9FA] pb-24" dir="rtl">
+      <Header />
+      
+      <main className="p-4 max-w-md mx-auto space-y-6">
+        <h1 className="text-xl font-black text-[#191970] text-right">ماذا تود أن تبيع؟</h1>
 
-      <form onSubmit={handleSubmit} className="px-4 py-4 space-y-5">
-        {/* Image Upload */}
-        <div>
-          <label className="block text-sm font-semibold text-foreground mb-2">
-            {t("photos")} ({images.length}/10)
-          </label>
-          <div className="grid grid-cols-4 gap-2">
+        {/* قسم رفع الصور */}
+        <div className="space-y-3">
+          <label className="block text-sm font-bold text-gray-700 text-right">صور المنتج ({images.length}/5)</label>
+          <div className="grid grid-cols-3 gap-2">
             {images.map((img, index) => (
-              <div key={index} className="relative aspect-square rounded-xl overflow-hidden bg-secondary">
-                <img src={img} alt="" className="w-full h-full object-cover" />
-                <button
-                  type="button"
-                  onClick={() => removeImage(index)}
-                  className="absolute top-1 end-1 w-6 h-6 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center"
-                >
+              <div key={index} className="relative aspect-square rounded-2xl overflow-hidden border">
+                <img src={img} className="w-full h-full object-cover" />
+                <button onClick={() => removeImage(index)} className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1">
                   <X className="w-3 h-3" />
                 </button>
               </div>
             ))}
-            {images.length < 10 && (
-              <button
-                type="button"
+            {images.length < 5 && (
+              <button 
                 onClick={() => fileInputRef.current?.click()}
-                className="aspect-square rounded-xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-1 hover:border-primary hover:bg-accent transition-colors"
+                className="aspect-square rounded-2xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-gray-400 bg-white hover:bg-gray-50 transition-all"
               >
-                <Plus className="w-6 h-6 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">{t("add")}</span>
+                <Camera className="w-6 h-6" />
+                <span className="text-[10px] mt-1 font-bold">إضافة صورة</span>
               </button>
             )}
           </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageUpload}
-            className="hidden"
-          />
+          <input type="file" ref={fileInputRef} onChange={handleImageUpload} multiple className="hidden" accept="image/*" />
         </div>
 
-        {/* Product Title */}
-        <div>
-          <label className="block text-sm font-semibold text-foreground mb-2">
-            {t("productName")}
-          </label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder={t("productNamePlaceholder")}
-            className="form-input"
-            maxLength={100}
+        {/* نموذج البيانات */}
+        <div className="space-y-4">
+          <input 
+            type="text" placeholder="اسم المنتج" 
+            className="w-full p-4 rounded-2xl bg-white border-none shadow-sm text-right"
+            value={title} onChange={(e) => setTitle(e.target.value)}
           />
-        </div>
 
-        {/* Price */}
-        <div>
-          <label className="block text-sm font-semibold text-foreground mb-2">
-            {t("price")} (DZD)
-          </label>
-          <input
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            placeholder={t("pricePlaceholder")}
-            className="form-input"
-            min="0"
-          />
-        </div>
+          <div className="relative">
+            <span className="absolute left-4 top-4 text-gray-400 font-bold">دج</span>
+            <input 
+              type="number" placeholder="السعر" 
+              className="w-full p-4 rounded-2xl bg-white border-none shadow-sm text-right pr-4"
+              value={price} onChange={(e) => setPrice(e.target.value)}
+            />
+          </div>
 
-        {/* Condition */}
-        <div>
-          <label className="block text-sm font-semibold text-foreground mb-2">
-            {t("condition")}
-          </label>
-          <div className="flex gap-3">
-            {(["new", "used"] as const).map((cond) => (
-              <button
-                key={cond}
-                type="button"
-                onClick={() => setCondition(cond)}
-                className={`flex-1 py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${
-                  condition === cond
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-secondary-foreground hover:bg-accent"
-                }`}
-              >
-                {condition === cond && <Check className="w-4 h-4" />}
-                {cond === "new" ? t("new") : t("used")}
-              </button>
-            ))}
+          <div className="grid grid-cols-2 gap-2">
+            <button 
+              onClick={() => setCondition("new")}
+              className={`p-3 rounded-2xl font-bold transition-all ${condition === 'new' ? 'bg-[#191970] text-white' : 'bg-white text-gray-500 shadow-sm'}`}
+            >جديد</button>
+            <button 
+              onClick={() => setCondition("used")}
+              className={`p-3 rounded-2xl font-bold transition-all ${condition === 'used' ? 'bg-[#191970] text-white' : 'bg-white text-gray-500 shadow-sm'}`}
+            >مستعمل</button>
+          </div>
+
+          <div className="relative">
+            <MapPin className="absolute right-4 top-4 text-gray-400 w-5 h-5" />
+            <input 
+              type="text" placeholder="الولاية" 
+              className="w-full p-4 pr-12 rounded-2xl bg-white border-none shadow-sm text-right"
+              value={wilaya} onChange={(e) => setWilaya(e.target.value)}
+            />
+          </div>
+
+          <div className="relative">
+            <Phone className="absolute right-4 top-4 text-gray-400 w-5 h-5" />
+            <input 
+              type="tel" placeholder="رقم واتساب" 
+              className="w-full p-4 pr-12 rounded-2xl bg-white border-none shadow-sm text-right"
+              value={phone} onChange={(e) => setPhone(e.target.value)}
+            />
           </div>
         </div>
 
-        {/* Wilaya */}
-        <div>
-          <label className="block text-sm font-semibold text-foreground mb-2">
-            {t("wilaya")}
-          </label>
-          <select
-            value={wilaya}
-            onChange={(e) => setWilaya(e.target.value)}
-            className="form-input appearance-none bg-card"
-          >
-            <option value="">{t("selectWilaya")}</option>
-            {wilayas.map((w) => (
-              <option key={w} value={w}>
-                {w}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Phone Number */}
-        <div>
-          <label className="block text-sm font-semibold text-foreground mb-2">
-            {t("whatsappNumber")}
-          </label>
-          <input
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="+213555123456"
-            className="form-input"
-          />
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
+        {/* زر النشر النهائي */}
+        <button 
+          onClick={handlePublish}
           disabled={isSubmitting}
-          className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-bold text-lg transition-all hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+          className="w-full bg-[#191970] text-white py-4 rounded-2xl font-black shadow-lg shadow-blue-100 flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50"
         >
-          {isSubmitting ? (
-            <>
-              <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
-              {t("publishing")}
-            </>
-          ) : (
-            <>
-              <Camera className="w-5 h-5" />
-              {t("publishListing")}
-            </>
-          )}
+          {isSubmitting ? "جاري النشر..." : "نشر المنتج الآن"}
+          <Check className="w-5 h-5" />
         </button>
-      </form>
+      </main>
 
       <BottomNav />
     </div>
